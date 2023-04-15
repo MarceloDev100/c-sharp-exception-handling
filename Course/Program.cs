@@ -3,15 +3,17 @@ using Course.Entities;
 class Program
 {
     /*
-       - Not recommended solution. 
-       Because all the reservation logic was implemented in Main class, so this is not 
-       recommended. There are many "if/elses" statements that make code complex to understand. 
-       Besides, every time it's needed to update a reservation, we have to repeat all the logic
-       to make this verification. Again, this is not recommended. 
+       - Not recommended solution.
+       - Bad solution - returning a string from a method 
 
-       The reservation logic must be implemented by the Reservation class, which controls
-       all this aspects mentioned.
-       
+       There is a method from Reservation class, called UpdateDates, that may return a string error to the Main class.
+
+       Why is it a bad solution ?
+       Reasons:
+       1) The semantics of the operation are impaired. Returning a string has nothing to do with updating the reservation. What if operation had to return a string (and not an error)? Just imagine a method that must return a string. This string would conflict with the error message string.
+       2) Besides, it's not possible to handle exceptions in constructors in this way, because a constructor can't return a string. Thus, I still had to keep reservation logic in the Main program. But reservation logic must be in the Reservation class.
+       3) Logic is restricted to nested conditionals.
+
     */
     static void Main(string[] args)
     {
@@ -22,12 +24,16 @@ class Program
         Console.Write("Check-out date (dd/MM/yyyy): ");
         DateTime checkOut = DateTime.Parse(Console.ReadLine());
 
+        // reservation logic is still in the Main class (not recommended)
         if (checkOut <= checkIn)
         {
             Console.WriteLine("Error in reservation: Check-out date must be after check-in date");
         }
         else
         {
+            /*
+              A reservation construct can't return a string (error message). So, the above logic had to be maintained.
+            */   
             Reservation reservation = new Reservation(roomNumber, checkIn, checkOut);
             Console.WriteLine("Reservation: " + reservation);
 
@@ -39,18 +45,14 @@ class Program
             Console.Write("Check-out date (dd/MM/yyyy): ");
             checkOut = DateTime.Parse(Console.ReadLine());
 
-            DateTime now = DateTime.Now;
-            if (checkIn < now || checkOut < now)
-            {
-                Console.WriteLine("Error in reservation: Reservation dates for update must be future dates");
-            }
-            else if (checkOut <= checkIn)
-            {
-                Console.WriteLine("Error in reservation: Check-out date must be after check-in date");
+            // returning a possible error in reservation.
+            string error  = reservation.UpdateDates(checkIn, checkOut);
+
+            if(error != null ){
+                System.Console.WriteLine("Error in reservation: " + error);
             }
             else
             { 
-                reservation.UpdateDates(checkIn, checkOut);
                 Console.WriteLine("Reservation: " + reservation);
             }
         }

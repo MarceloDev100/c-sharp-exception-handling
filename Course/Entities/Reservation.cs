@@ -23,14 +23,28 @@ namespace Course.Entities
         {
             TimeSpan duration = CheckOut.Subtract(CheckIn);
             return duration.Days;
-           //TimeSpan duration = CheckOut.Subtract(CheckIn);
-           //return (int) duration.TotalDays;
+            //TimeSpan duration = CheckOut.Subtract(CheckIn);
+            //return (int) duration.TotalDays;
         }
 
-        public void UpdateDates(DateTime checkIn , DateTime checkOut)
+        public string UpdateDates(DateTime checkIn, DateTime checkOut)
         {
-             CheckIn = checkIn;
-             CheckOut = checkOut;
+            DateTime now = DateTime.Now;
+            if (checkIn < now || checkOut < now)
+            {
+                return "Reservation dates for update must be future dates";
+            }
+
+            if (checkOut <= checkIn)
+            {
+                return "Check-out date must be after check-in date";
+            }
+
+            CheckIn = checkIn;
+            CheckOut = checkOut;
+
+            // indicates no error at verification
+            return null;
         }
 
         public override string ToString()
