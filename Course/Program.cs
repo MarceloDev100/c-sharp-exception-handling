@@ -5,7 +5,9 @@ class Program
     /*
        - Not recommended solution. 
        Because all the reservation logic was implemented in Main class, so this is not 
-       recommended. There are many "if/elses" statements that make code complex to understand. Besides, every time it's needed to update a reservation, we have to repeat all the logic to make this verification. Again, this is not recommended. 
+       recommended. There are many "if/elses" statements that make code complex to understand. 
+       Besides, every time it's needed to update a reservation, we have to repeat all the logic
+       to make this verification. Again, this is not recommended. 
 
        The reservation logic must be implemented by the Reservation class, which controls
        all this aspects mentioned.
